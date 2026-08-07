@@ -5,11 +5,12 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 );
 
 const { server } = require('./src/mocks/server');
-const { resetTasks } = require('./src/mocks/handlers');
+const { resetTasks, resetLunchReservations } = require('./src/mocks/handlers');
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => {
   server.resetHandlers();
   resetTasks();
+  resetLunchReservations();
 });
 afterAll(() => server.close());

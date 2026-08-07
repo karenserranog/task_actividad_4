@@ -1,0 +1,68 @@
+appId: com.taskmanager.app
+---
+# 1. Abrir la app limpia y entrar al flujo de reserva de almuerzo.
+- launchApp:
+    clearState: true
+- assertVisible: "Task Manager"
+- tapOn: "Reserva de Almuerzo Universitario"
+- assertVisible: "Datos del estudiante"
+
+# 2. Datos del estudiante.
+- tapOn:
+    id: "input-reserva-nombre"
+- inputText: "Karen Lorena Serrano"
+- tapOn:
+    id: "input-codigo-carne"
+- inputText: "191096"
+- tapOn:
+    id: "input-correo-institucional"
+- inputText: "karenserranog@gmail.com"
+
+# 3. Informacion de la reserva.
+- scrollUntilVisible:
+    element:
+      id: "input-menu"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-menu"
+- inputText: "Menu vegetariano"
+- tapOn:
+    id: "input-sede"
+- inputText: "Cafeteria central"
+- tapOn:
+    id: "input-hora-recogida"
+- inputText: "12:30"
+
+# 4. Medio de pago.
+- scrollUntilVisible:
+    element:
+      id: "input-titular"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-titular"
+- inputText: "Karen Serrano"
+- scrollUntilVisible:
+    element:
+      id: "input-numero-tarjeta"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-numero-tarjeta"
+- inputText: "4111111111111113"
+- tapOn:
+    id: "input-vencimiento"
+- inputText: "12/28"
+- tapOn:
+    id: "input-cvv"
+- inputText: "987"
+
+# 5. Confirmar y pagar la reserva.
+- scrollUntilVisible:
+    element:
+      text: "Confirmar y Pagar Reserva"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Confirmar y Pagar Reserva"
+- assertVisible: "Reserva de almuerzo confirmada exitosamente"

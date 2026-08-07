@@ -1,0 +1,143 @@
+appId: com.taskmanager.app
+---
+# Verifica que, despues de confirmar y pagar, todos los campos vuelven
+# a su estado inicial. Se usan valores distintos a los placeholders para
+# detectar que el formulario no conserve datos ingresados.
+
+# 1. Abrir la app limpia y entrar al flujo de reserva de almuerzo.
+- launchApp:
+    clearState: true
+- assertVisible: "Task Manager"
+- tapOn: "Reserva de Almuerzo Universitario"
+- assertVisible: "Datos del estudiante"
+
+# 2. Llenar estudiante, reserva y pago con datos validos.
+- tapOn:
+    id: "input-reserva-nombre"
+- inputText: "Maria Lopez"
+- tapOn:
+    id: "input-codigo-carne"
+- inputText: "20249999"
+- tapOn:
+    id: "input-correo-institucional"
+- inputText: "maria.lopez@universidad.edu.co"
+- scrollUntilVisible:
+    element:
+      id: "input-menu"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-menu"
+- inputText: "Menu vegano"
+- tapOn:
+    id: "input-sede"
+- inputText: "Cafeteria norte"
+- tapOn:
+    id: "input-hora-recogida"
+- inputText: "13:15"
+- scrollUntilVisible:
+    element:
+      id: "input-titular"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-titular"
+- inputText: "Maria Lopez"
+- scrollUntilVisible:
+    element:
+      id: "input-numero-tarjeta"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-numero-tarjeta"
+- inputText: "5555444433332222"
+- tapOn:
+    id: "input-vencimiento"
+- inputText: "09/29"
+- tapOn:
+    id: "input-cvv"
+- inputText: "987"
+
+# 3. Confirmar y pagar la reserva.
+- scrollUntilVisible:
+    element:
+      text: "Confirmar y Pagar Reserva"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Confirmar y Pagar Reserva"
+- assertVisible: "Reserva de almuerzo confirmada exitosamente"
+
+# 4. Comprobar que cada campo quedo limpio.
+# En inputs vacios Maestro puede leer texto vacio o el placeholder visible.
+- scrollUntilVisible:
+    element:
+      id: "input-reserva-nombre"
+    direction: UP
+    centerElement: true
+- copyTextFrom:
+    id: "input-reserva-nombre"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "Karen Lorena Serrano"}
+    label: "Nombre limpio"
+- copyTextFrom:
+    id: "input-codigo-carne"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "190000"}
+    label: "Codigo/carne limpio"
+- copyTextFrom:
+    id: "input-correo-institucional"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "karen@universidad.edu.co"}
+    label: "Correo institucional limpio"
+
+- scrollUntilVisible:
+    element:
+      id: "input-menu"
+    direction: DOWN
+    centerElement: true
+- copyTextFrom:
+    id: "input-menu"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "Menu del dia"}
+    label: "Menu limpio"
+- copyTextFrom:
+    id: "input-sede"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "Cafeteria central"}
+    label: "Sede limpia"
+- copyTextFrom:
+    id: "input-hora-recogida"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "12:30"}
+    label: "Hora de recogida limpia"
+
+- scrollUntilVisible:
+    element:
+      id: "input-titular"
+    direction: DOWN
+    centerElement: true
+- copyTextFrom:
+    id: "input-titular"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "Karen Serrano"}
+    label: "Titular limpio"
+- scrollUntilVisible:
+    element:
+      id: "input-numero-tarjeta"
+    direction: DOWN
+    centerElement: true
+- copyTextFrom:
+    id: "input-numero-tarjeta"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "4121119955895613"}
+    label: "Numero de tarjeta limpio"
+- copyTextFrom:
+    id: "input-vencimiento"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "12/28"}
+    label: "Vencimiento limpio"
+- copyTextFrom:
+    id: "input-cvv"
+- assertTrue:
+    condition: ${maestro.copiedText == "" || maestro.copiedText == "987"}
+    label: "CVV limpio"

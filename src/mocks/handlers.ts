@@ -1,13 +1,18 @@
 import { http, HttpResponse } from 'msw';
-import { Task } from '../types';
+import { LunchReservationRequest, LunchReservationResponse, Task } from '../types';
 
 const API_URL = 'https://api.taskmanager.com';
 
 // ponytail: la "API falsa" es un array en memoria; resetTasks lo limpia entre tests
 let tasks: Task[] = [];
+let lunchReservations: LunchReservationResponse[] = [];
 
 export const resetTasks = () => {
   tasks = [];
+};
+
+export const resetLunchReservations = () => {
+  lunchReservations = [];
 };
 
 export const handlers = [
@@ -19,6 +24,21 @@ export const handlers = [
   }),
 
   http.get(`${API_URL}/tasks`, () => HttpResponse.json(tasks)),
+
+  http.post(`${API_URL}/lunch-reservations`, async ({ request }) => {
+    const payload = (await request.json()) as LunchReservationRequest;
+    const reservation: LunchReservationResponse = {
+      id: String(lunchReservations.length + 1),
+      ...payload,
+      status: 'confirmed',
+      confirmationCode: `ALM-${lunchReservations.length + 1}`,
+      message: 'Reserva de almuerzo confirmada exitosamente',
+    };
+    lunchReservations.push(reservation);
+    return HttpResponse.json(reservation, { status: 201 });
+  }),
+
+  http.get(`${API_URL}/lunch-reservations`, () => HttpResponse.json(lunchReservations)),
 ];
 
 // https://api.taskmanager.com/tasks - POST

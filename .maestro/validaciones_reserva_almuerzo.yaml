@@ -1,0 +1,145 @@
+appId: com.taskmanager.app
+---
+# Verifica las validaciones principales del flujo de reserva de almuerzo:
+# campos requeridos, formatos invalidos y correccion posterior.
+
+# 1. Abrir la app limpia y entrar al flujo de reserva de almuerzo.
+- launchApp:
+    clearState: true
+- assertVisible: "Task Manager"
+- tapOn: "Reserva de Almuerzo Universitario"
+- assertVisible: "Datos del estudiante"
+
+# 2. Intentar confirmar vacio debe mostrar el mensaje de campos requeridos.
+- scrollUntilVisible:
+    element:
+      text: "Confirmar y Pagar Reserva"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Confirmar y Pagar Reserva"
+- assertVisible: "Completa todos los campos antes de continuar"
+- assertNotVisible: "Reserva de almuerzo confirmada exitosamente"
+
+# 3. Datos del estudiante con formatos invalidos.
+- scrollUntilVisible:
+    element:
+      id: "input-reserva-nombre"
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: "input-reserva-nombre"
+- inputText: "Juan123"
+- tapOn:
+    id: "input-codigo-carne"
+- inputText: "ABC123"
+- tapOn:
+    id: "input-correo-institucional"
+- inputText: "juan-universidad.edu.co"
+
+# 4. Informacion de la reserva valida para aislar errores de formato.
+- scrollUntilVisible:
+    element:
+      id: "input-menu"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-menu"
+- inputText: "Menu del dia"
+- tapOn:
+    id: "input-sede"
+- inputText: "Cafeteria central"
+- tapOn:
+    id: "input-hora-recogida"
+- inputText: "12:30"
+
+# 5. Pago con tarjeta y vencimiento invalidos.
+- scrollUntilVisible:
+    element:
+      id: "input-titular"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-titular"
+- inputText: "Juan Perez"
+- scrollUntilVisible:
+    element:
+      id: "input-numero-tarjeta"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-numero-tarjeta"
+- inputText: "4111-1111-1111-1111"
+- tapOn:
+    id: "input-vencimiento"
+- inputText: "13/2028"
+- tapOn:
+    id: "input-cvv"
+- inputText: "123"
+
+# 6. Confirmar debe rechazar los datos invalidos y mostrar cada error.
+- scrollUntilVisible:
+    element:
+      text: "Confirmar y Pagar Reserva"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Confirmar y Pagar Reserva"
+- assertNotVisible: "Reserva de almuerzo confirmada exitosamente"
+- scrollUntilVisible:
+    element:
+      text: "El nombre solo permite letras"
+    direction: UP
+    centerElement: true
+- assertVisible: "El codigo/carne solo permite numeros"
+- assertVisible: "Correo institucional invalido"
+- scrollUntilVisible:
+    element:
+      text: "El numero de tarjeta solo permite numeros"
+    direction: DOWN
+    centerElement: true
+- assertVisible: "El vencimiento debe tener formato MM/AA"
+
+# 7. Corregir los campos invalidos.
+- scrollUntilVisible:
+    element:
+      id: "input-reserva-nombre"
+    direction: UP
+    centerElement: true
+- tapOn:
+    id: "input-reserva-nombre"
+- eraseText
+- inputText: "Juan Perez"
+- tapOn:
+    id: "input-codigo-carne"
+- eraseText
+- inputText: "20240001"
+- tapOn:
+    id: "input-correo-institucional"
+- eraseText
+- inputText: "juan@universidad.edu.co"
+- scrollUntilVisible:
+    element:
+      id: "input-numero-tarjeta"
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    id: "input-numero-tarjeta"
+- eraseText
+- inputText: "4111111111111111"
+- tapOn:
+    id: "input-vencimiento"
+- eraseText
+- inputText: "12/28"
+
+# 8. Con datos corregidos debe confirmar la reserva.
+- scrollUntilVisible:
+    element:
+      text: "Confirmar y Pagar Reserva"
+    direction: DOWN
+    centerElement: true
+- tapOn: "Confirmar y Pagar Reserva"
+- assertVisible: "Reserva de almuerzo confirmada exitosamente"
+- assertNotVisible: "El nombre solo permite letras"
+- assertNotVisible: "El codigo/carne solo permite numeros"
+- assertNotVisible: "Correo institucional invalido"
+- assertNotVisible: "El numero de tarjeta solo permite numeros"
+- assertNotVisible: "El vencimiento debe tener formato MM/AA"

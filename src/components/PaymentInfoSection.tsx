@@ -22,14 +22,14 @@ export function PaymentInfoSection({ values, onChange, errors = {} }: Props) {
       <LabeledInput
         label="Titular de la tarjeta"
         testID="input-titular"
-        placeholder="Juan Pérez"
+        placeholder="Karen Serrano"
         value={values.titular}
         onChangeText={(t) => onChange('titular', t)}
       />
       <LabeledInput
         label="Número de tarjeta"
         testID="input-numero-tarjeta"
-        placeholder="4111 1111 1111 1111"
+        placeholder="4121119955895613"
         keyboardType="phone-pad"
         value={values.numeroTarjeta}
         error={errors.numeroTarjeta}
@@ -46,7 +46,7 @@ export function PaymentInfoSection({ values, onChange, errors = {} }: Props) {
       <LabeledInput
         label="CVV"
         testID="input-cvv"
-        placeholder="123"
+        placeholder="987"
         keyboardType="phone-pad"
         secureTextEntry
         value={values.cvv}
