@@ -27,7 +27,7 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Ejecutar pruebas con cobertura
-        run: npm run test:coverage -- --ci --runInBand
+        run: npm run test:coverage -- --ci --runInBand --coverageReporters="text" --coverageReporters="json-summary" --coverageReporters="lcov"
 
       - name: Validar umbral de cobertura (>=70%)
         run: |
