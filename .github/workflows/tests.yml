@@ -28,3 +28,45 @@ jobs:
 
       - name: Ejecutar pruebas con cobertura
         run: npm run test:coverage -- --ci --runInBand
+
+      - name: Validar umbral de cobertura (>=70%)
+        run: |
+          echo "==========================================================="
+          echo "  VERIFICACION DE COBERTURA (Umbral: 70%)"
+          echo "==========================================================="
+          
+          COVERAGE_FILE="./coverage/coverage-summary.json"
+          
+          if [ ! -f "$COVERAGE_FILE" ]; then
+            echo "Error: No se encontro el archivo de cobertura"
+            exit 1
+          fi
+          
+          STATEMENTS=$(node -e "console.log(Math.round(require('$COVERAGE_FILE').total.statements.pct))")
+          BRANCHES=$(node -e "console.log(Math.round(require('$COVERAGE_FILE').total.branches.pct))")
+          FUNCTIONS=$(node -e "console.log(Math.round(require('$COVERAGE_FILE').total.functions.pct))")
+          LINES=$(node -e "console.log(Math.round(require('$COVERAGE_FILE').total.lines.pct))")
+          
+          THRESHOLD=70
+          
+          echo "Metricas obtenidas:"
+          echo "   Statements: $STATEMENTS% (minimo: $THRESHOLD%)"
+          echo "   Branches:   $BRANCHES% (minimo: $THRESHOLD%)"
+          echo "   Functions:  $FUNCTIONS% (minimo: $THRESHOLD%)"
+          echo "   Lines:      $LINES% (minimo: $THRESHOLD%)"
+          echo "==========================================================="
+          
+          if [ "$STATEMENTS" -lt "$THRESHOLD" ] || [ "$BRANCHES" -lt "$THRESHOLD" ] || [ "$FUNCTIONS" -lt "$THRESHOLD" ] || [ "$LINES" -lt "$THRESHOLD" ]; then
+            echo "FALLA: Cobertura por debajo del 70% requerido"
+            exit 1
+          else
+            echo "EXITO: Cobertura cumple el umbral minimo del 70%"
+            exit 0
+          fi
+
+      - name: Subir reporte de cobertura como Artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
