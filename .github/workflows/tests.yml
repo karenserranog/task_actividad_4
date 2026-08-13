@@ -1,23 +1,23 @@
-name: Test Suite
+name: CI - Tests
 
 on:
   push:
-    branches: [main, develop]
+    branches: [feature/transactional-flow]
   pull_request:
-    branches: [main]
+    branches: [feature/transactional-flow]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del código
+      - name: Checkout del codigo
         uses: actions/checkout@v4
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.13.x'
           cache: 'npm'
 
       - name: Instalar dependencias
@@ -27,4 +27,4 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Ejecutar pruebas con cobertura
-        run: npx jest --coverage --ci
+        run: npm run test:coverage -- --ci --runInBand
